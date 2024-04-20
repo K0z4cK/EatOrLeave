@@ -4,15 +4,24 @@ using UnityEngine.UI;
 
 public class ArrowMinigame : MonoBehaviour
 {
+    public static ArrowMinigame Instance;
+
     [SerializeField] private Slider slider;
     [SerializeField] private GameObject safeZoneObj;
     [SerializeField] private Transform safeZoneParent;
+    [SerializeField] RawImage targetImage;
+    [SerializeField] private Image handle;
 
     private int _moveDirection;
-    private const float _moveDelay = 0.05f;
+    private const float _moveDelay = 0.01f;
     private const float _moveStep = 0.05f;
 
-    private float _safeZoneWidth = 30f;
+    private GameObject _spawnedSafeZone;
+
+    private int _timesGameWasCompleted = 0;
+    private const int _gamesCompletedLimit = 3;
+    private bool _isMinigameFinished = false;
+    private readonly float[] _safeZoneWidths = { 1f, 0.7f, 0.3f };
 
     private enum MoveDirection
     {
@@ -20,17 +29,25 @@ public class ArrowMinigame : MonoBehaviour
         Right = 1
     }
 
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(this);
+    }
+
     private void Start()
     {
         _moveDirection = (int)MoveDirection.Right;
 
-        SpawnSafeZone();
+        SpawnSafeZone(_safeZoneWidths[_timesGameWasCompleted]);
         StartCoroutine(MoveArrow());
     }
 
     private IEnumerator MoveArrow()
     {
-        while (true)
+        while (!_isMinigameFinished)
         {
             yield return new WaitForSeconds(_moveDelay);
 
@@ -43,38 +60,73 @@ public class ArrowMinigame : MonoBehaviour
         } 
     }
 
-    private void SpawnSafeZone()
+    private void SpawnSafeZone(float safeZoneWidth)
     {
-        RectTransform handleRect = slider.handleRect;
+        if (_spawnedSafeZone != null)
+            Destroy(_spawnedSafeZone);
 
-        float minX = handleRect.position.x - handleRect.rect.width * 0.5f;
-        float maxX = handleRect.position.x + handleRect.rect.width * 0.5f;
-        float randomX = Random.Range(minX, maxX);
+        RectTransform parentRect = targetImage.transform.parent.GetComponent<RectTransform>();
 
-        Vector3 spawnPosition = new(randomX, handleRect.position.y, handleRect.position.z);
+        float parentWidth = parentRect.rect.width;
+        float parentHeight = parentRect.rect.height;
 
-        if (IsWithinSliderBounds(spawnPosition))
-        {
-            GameObject safeZoneGO = Instantiate(safeZoneObj, spawnPosition, Quaternion.identity, safeZoneParent);
+        _spawnedSafeZone = Instantiate(safeZoneObj);
+        _spawnedSafeZone.transform.SetParent(targetImage.transform);
 
-            float parentHeight = safeZoneParent.GetComponent<RectTransform>().sizeDelta.y;
-            float width = _safeZoneWidth;
-            safeZoneGO.GetComponent<RectTransform>().sizeDelta = new Vector2(width, parentHeight);
+        _spawnedSafeZone.transform.localScale = new Vector3(safeZoneWidth, parentHeight / _spawnedSafeZone.GetComponent<RectTransform>().rect.height, 1f);
+
+        float randomX = Random.Range(0f, parentWidth);
+
+        _spawnedSafeZone.transform.localPosition = new Vector3(randomX - parentWidth / 2f, 0, 0f);
+    }
+
+    private void Update()
+    {
+        if (_isMinigameFinished)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            if (IsArrowInSafeZone())
+            {
+                _timesGameWasCompleted++;
+                CheckWinCondition();
+
+                if (!_isMinigameFinished)
+                    UpdateDifficulty();
+            }
+            else
+                print("Minigame lose!"); 
         }
-        else
+    }
+
+    private bool IsArrowInSafeZone()
+    {
+        if (handle.transform.position.x < _spawnedSafeZone.transform.position.x + _spawnedSafeZone.transform.localScale.x
+            && handle.transform.position.x > _spawnedSafeZone.transform.position.x - _spawnedSafeZone.transform.localScale.x)
         {
-            Debug.LogError("Safe zone obj is out of bounds");
+            return true;
         }
+        return false;
+    }
 
-        bool IsWithinSliderBounds(Vector3 position)
+    private void UpdateDifficulty()
+    {
+        ResetArrow();
+        SpawnSafeZone(_safeZoneWidths[_timesGameWasCompleted]);
+    }
+
+    private void ResetArrow()
+    {
+        slider.value = 0;
+        _moveDirection = (int)MoveDirection.Right;
+    }
+
+    private void CheckWinCondition()
+    {
+        if (Mathf.Approximately(_timesGameWasCompleted, _gamesCompletedLimit))
         {
-            RectTransform sliderRect = slider.GetComponent<RectTransform>();
-            Vector3[] corners = new Vector3[4];
-            sliderRect.GetWorldCorners(corners);
-
-            // Check if position is within the rectangle formed by the corners
-            return position.x >= corners[0].x && position.x <= corners[2].x &&
-                    position.y >= corners[0].y && position.y <= corners[1].y;
+            print("Current minigame complete");
+            _isMinigameFinished = true;
         }
     }
 }
