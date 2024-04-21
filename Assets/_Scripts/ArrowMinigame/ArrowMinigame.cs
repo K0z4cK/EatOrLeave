@@ -30,7 +30,6 @@ public class ArrowMinigame : MonoBehaviour
 
     public void Init()
     {
-        _difficultyCoef = 0.05f;
         _timesGameWasCompleted = 0;
         _isMinigameFinished = false;
         _moveDirection = (int)MoveDirection.Right;
