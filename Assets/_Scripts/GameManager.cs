@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
     private const int _timerChangeDelay = 1;
     private bool _isRoundStillGoing = true;
 
-    private int _currentMoney = 1000;
+    private int _currentMoney = 50;
     private int _currentWeight = 70;
 
 
