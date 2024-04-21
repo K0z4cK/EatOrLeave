@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     private int _currentTimeInSeconds = 60;
     private const int _timerChangeDelay = 1;
     private bool _isRoundStillGoing = true;
+    
+    public bool IsGameLosed { get; set; }
 
     public int CurrentDifficultyValue { 
         get => _currentDifficultyValue;

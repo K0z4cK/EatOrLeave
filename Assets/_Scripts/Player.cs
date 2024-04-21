@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Inventory : MonoBehaviour
+public class Player : MonoBehaviour
 {
     private enum ItemKeys
     {
@@ -121,6 +121,13 @@ public class Inventory : MonoBehaviour
     {
         if (!_isNeedleItemAvailable)
             return;
+
+        float badUseProbalitity = Random.Range(0f, 1f);
+
+        if (badUseProbalitity < 0.05f)
+            _instance.IsGameLosed = true;
+        else
+            Weigth -= (int)(Weigth * 0.2f);
 
         ConsumeItem(needleImage, ref _isNeedleItemAvailable);
     }
