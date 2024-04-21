@@ -25,13 +25,14 @@ public class MidGame : MonoBehaviour
 
     private bool _isPouring = false;
 
-    private void Start()
+    /*private void Start()
     {
         Init();
-    }
+    }*/
 
-    private void Init() 
+    public void Init() 
     {
+        _isPouring = false;
         _lineValue = Random.Range(_minLineValue, _maxLineValue);
         _slider.handleRect = _line.GetComponent<RectTransform>();
         _slider.value = _lineValue;
@@ -105,5 +106,7 @@ public class MidGame : MonoBehaviour
             GameManager.Instance.DecreaseTime(5);
             Debug.Log("Bad");
         }
+
+        GameManager.Instance.NextMinigame();
     }
 }

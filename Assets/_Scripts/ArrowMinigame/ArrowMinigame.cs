@@ -9,7 +9,7 @@ public class ArrowMinigame : MonoBehaviour
     [SerializeField] private Transform safeZoneParent;
     [SerializeField] RawImage targetImage;
     [SerializeField] private Image handle;
-    [SerializeField, Range(0.5f, 5f)] private float _moveStep = 0.5f;
+    [SerializeField, Range(0.5f, 50f)] private float _moveStep = 20f;
 
     private int _moveDirection;
 
@@ -129,6 +129,7 @@ public class ArrowMinigame : MonoBehaviour
         {
             print("Current minigame complete");
             _isMinigameFinished = true;
+            GameManager.Instance.StartMidgame();
         }
     }
 }

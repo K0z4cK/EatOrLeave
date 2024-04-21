@@ -121,6 +121,7 @@ public class ArrowsMinigame : MonoBehaviour
             Debug.Log("End");
             _isTimerStart = false;
             StopCoroutine(_timerCoroutine);
+            GameManager.Instance.StartMidgame();
         }
         else
         {
@@ -151,9 +152,9 @@ public class ArrowsMinigame : MonoBehaviour
 
             if (_currentStage == _stagesTimers.Count)
             {
-                Debug.Log("Win");
-                
+                Debug.Log("Win");                
                 StopCoroutine(_timerCoroutine);
+                GameManager.Instance.StartMidgame();
                 return;
             }
 

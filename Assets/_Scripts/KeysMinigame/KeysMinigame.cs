@@ -21,8 +21,9 @@ public class KeysMinigame : MonoBehaviour
     private int _timesMinigameWasFinished = 0;
     private int _minigamesFinishedLimit = 3;
 
-    private void Start()
+    public void Init()
     {
+        _isMinigameFinished = false;
         StartQTE();
     }
 
@@ -38,13 +39,22 @@ public class KeysMinigame : MonoBehaviour
         _keySequence = GenerateRandomKeySequence();
     }
 
+    private void FixedUpdate()
+    {
+        if (!_isQTEActive)
+            return;
+
+        _timer -= Time.fixedDeltaTime;
+        ChangeTimerImage();
+    }
+
     private void Update()
     {
         if (!_isQTEActive)
             return;
 
-        _timer -= Time.deltaTime;
-        ChangeTimerImage();
+       /* _timer -= Time.deltaTime;
+        ChangeTimerImage();*/
 
         if (_timer <= 0)
         {
@@ -115,8 +125,9 @@ public class KeysMinigame : MonoBehaviour
             _isMinigameFinished = true;
             _isQTEActive = false;
 
-            GameManager.Instance.StopGame();
+            //GameManager.Instance.StopGame();
             print("Minigame complete");
+            GameManager.Instance.StartMidgame();
         }
     }
 

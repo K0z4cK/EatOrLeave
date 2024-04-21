@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(StartTimer());
+        StartLevel();
     }
 
 
@@ -79,25 +80,34 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private void NextMinigame()
+    public void NextMinigame()
     {
         switch (_minigamesTypes[_currentMinigame])
         {
             case MinigamesType.Pointer:
+                _pointerMinigame.gameObject.SetActive(true);
                 _pointerMinigame.Init();
                 break;
             case MinigamesType.Arrows:
+                _arrowsMinigame.gameObject.SetActive(true);
                 _arrowsMinigame.Init();
                 break;
-            /*case MinigamesType.Keys:
-                _keysMinigame.Init();*/
+            case MinigamesType.Keys:
+                _keysMinigame.gameObject.SetActive(true);
+                _keysMinigame.Init();
+                break;
         }
 
     }
 
-    private void StartMidgame()
+    public void StartMidgame()
     {
+        _currentMinigame++;
+        _pointerMinigame.gameObject.SetActive(false);
+        _arrowsMinigame.gameObject.SetActive(false);
+        _keysMinigame.gameObject.SetActive(false);
 
+        _midGame.Init();
     }
 
     private IEnumerator StartTimer()
