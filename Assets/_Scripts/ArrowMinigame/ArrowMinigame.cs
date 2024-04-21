@@ -9,17 +9,16 @@ public class ArrowMinigame : MonoBehaviour
     [SerializeField] private Transform safeZoneParent;
     [SerializeField] RawImage targetImage;
     [SerializeField] private Image handle;
+    [SerializeField, Range(0.5f, 5f)] private float _moveStep = 0.5f;
 
     private int _moveDirection;
-    private const float _moveDelay = 0.01f;
-    private const float _moveStep = 0.05f;
 
     private GameObject _spawnedSafeZone;
 
     private int _timesGameWasCompleted = 0;
     private const int _gamesCompletedLimit = 3;
     private bool _isMinigameFinished = false;
-    private readonly float[] _safeZoneWidths = { 1f, 0.7f, 0.3f };
+    private readonly float[] _safeZoneWidths = { 1f, 0.7f, 0.4f };
 
     private enum MoveDirection
     {
@@ -39,14 +38,14 @@ public class ArrowMinigame : MonoBehaviour
     {
         while (!_isMinigameFinished)
         {
-            yield return new WaitForSeconds(_moveDelay);
+            yield return null;
 
             if (Mathf.Approximately(slider.value, 1))
                 _moveDirection = (int)MoveDirection.Left;
             if (Mathf.Approximately(slider.value, 0))
                 _moveDirection = (int)MoveDirection.Right;
 
-            slider.value += _moveStep * _moveDirection;
+            slider.value += _moveStep * _moveDirection * Time.deltaTime;
         } 
     }
 

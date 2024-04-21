@@ -338,7 +338,7 @@ MonoBehaviour:
   - {fileID: 1439575680}
   - {fileID: 1863322094}
   - {fileID: 371262912}
-  timeLimit: 2
+  timeLimit: 3
   timerLines:
   - {fileID: 913673015}
   - {fileID: 1381270031}
