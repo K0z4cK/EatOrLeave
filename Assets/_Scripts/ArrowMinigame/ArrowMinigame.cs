@@ -4,8 +4,6 @@ using UnityEngine.UI;
 
 public class ArrowMinigame : MonoBehaviour
 {
-    public static ArrowMinigame Instance;
-
     [SerializeField] private Slider slider;
     [SerializeField] private GameObject safeZoneObj;
     [SerializeField] private Transform safeZoneParent;
@@ -27,14 +25,6 @@ public class ArrowMinigame : MonoBehaviour
     {
         Left = -1,
         Right = 1
-    }
-
-    private void Awake()
-    {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(this);
     }
 
     private void Start()
