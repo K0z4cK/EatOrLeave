@@ -6,11 +6,11 @@ using UnityEngine.UI;
 public class KeysMinigame : MonoBehaviour
 {
     [SerializeField] private GameObject[] keyPrefabs; 
-    [SerializeField] private TextMeshProUGUI[] keyTexts; 
     [SerializeField] private float timeLimit;
     [SerializeField] private Image[] timerLines;
+    [SerializeField] private List<Arrow> _arrows;
 
-    private List<string> _keySequence; 
+    private List<Arrow> _keySequence; 
     private float _timer;
     private const float _difficultyCoef = 0.25f;
     private bool _isQTEActive;
@@ -23,14 +23,7 @@ public class KeysMinigame : MonoBehaviour
 
     private void Start()
     {
-        // Ensure key prefabs and key texts have same length
-        if (keyPrefabs.Length != keyTexts.Length)
-        {
-            Debug.LogError("Number of key prefabs and key texts must be equal!");
-            return;
-        }
-        else
-            StartQTE();
+        StartQTE();
     }
 
     private void StartQTE()
@@ -43,9 +36,6 @@ public class KeysMinigame : MonoBehaviour
         ResetKeysObjects();
 
         _keySequence = GenerateRandomKeySequence();
-
-        for (int i = 0; i < _keySequence.Count; i++)
-            keyTexts[i].text = _keySequence[i];
     }
 
     private void Update()
@@ -62,7 +52,7 @@ public class KeysMinigame : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(GetKeyByString(_keySequence[0])))
+        if (Input.GetKeyDown(_keySequence[0].keyCode))
         {
             // Correct key pressed, remove from sequence
             _keySequence.RemoveAt(0);
@@ -93,32 +83,20 @@ public class KeysMinigame : MonoBehaviour
             timerPart.fillAmount = 1;
     }
 
-    private List<string> GenerateRandomKeySequence()
+    private List<Arrow> GenerateRandomKeySequence()
     {
-        List<string> keys = new List<string>() { "↑", "↓", "←", "→" };
-        List<string> sequence = new List<string>();
+        List<Arrow> sequence = new List<Arrow>();
 
         int numKeys = _currentSequenceKeysCount[_timesMinigameWasFinished];
 
         for (int i = 0; i < numKeys; i++)
         {
-            int randomIndex = Random.Range(0, keys.Count);
-            sequence.Add(keys[randomIndex]);
+            int randomIndex = Random.Range(0, _arrows.Count);
+            sequence.Add(_arrows[randomIndex]);
+            keyPrefabs[i].GetComponent<Image>().sprite = _arrows[randomIndex].sprite;
         }
 
         return sequence;
-    }
-
-    private KeyCode GetKeyByString(string keyString)
-    {
-        return keyString switch
-        {
-            "↑" => KeyCode.UpArrow,
-            "↓" => KeyCode.DownArrow,
-            "←" => KeyCode.LeftArrow,
-            "→" => KeyCode.RightArrow,
-            _ => KeyCode.None,
-        };
     }
 
     private void ProgressQTE()

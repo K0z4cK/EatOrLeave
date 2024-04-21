@@ -53,7 +53,7 @@ public class Inventory : MonoBehaviour
     {
         if (!_isWaterItemAvailable)
             return;
-
+        // - weight
         ConsumeItem(waterImage, ref _isWaterItemAvailable);
     }
 
@@ -61,7 +61,8 @@ public class Inventory : MonoBehaviour
     {
         if (!_isEnergyDrinkItemAvailable)
             return;
-
+        // + more time than water and + calories
+        // 30% 
         ConsumeItem(energyDrinkImage, ref _isEnergyDrinkItemAvailable);
     }
 
