@@ -24,8 +24,12 @@ public class ArrowsMinigame : MonoBehaviour
     [SerializeField]
     private Image _rightArrowImage;
 
-    [SerializeField]
-    private TMP_Text _timer;
+    [SerializeField] 
+    private float timeLimit;
+    [SerializeField] 
+    private Image[] timerLines;
+
+    //private float _timer;
 
     private Arrow _leftArrow;
     private Arrow _rightArrow;
@@ -70,6 +74,18 @@ public class ArrowsMinigame : MonoBehaviour
         _timerCoroutine = StartCoroutine(StageCoroutine());
     }
 
+    private void ChangeTimerImage()
+    {
+        foreach (Image timerPart in timerLines)
+            timerPart.fillAmount -= (Time.fixedDeltaTime / _stagesTimers[_currentStage]);
+    }
+
+    private void ResetTimerImage()
+    {
+        foreach (Image timerPart in timerLines)
+            timerPart.fillAmount = 1;
+    }
+
     private IEnumerator StageCoroutine()
     {
         float time = 0;
@@ -92,7 +108,7 @@ public class ArrowsMinigame : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
             time -= 1f;
-            _timer.text = time + ":00";
+            
         }
 
         //yield return new WaitForSeconds(_stagesTimers[_currentStage]);
@@ -107,10 +123,18 @@ public class ArrowsMinigame : MonoBehaviour
         }
         else
         {
-            _timer.text = _stagesTimers[_currentStage] + ":00";
+            ResetTimerImage();
             StartStage();
         }
         //lose
+    }
+
+    private void FixedUpdate()
+    {
+        if (!_isTimerStart)
+            return;
+
+        ChangeTimerImage();
     }
 
     private void Update()
@@ -118,6 +142,7 @@ public class ArrowsMinigame : MonoBehaviour
         if (!_isTimerStart)
             return;
 
+        //ChangeTimerImage();
         if (Input.GetKey(_leftArrow.keyCode) && Input.GetKey(_rightArrow.keyCode))
         {
             _currentStage++;
@@ -132,7 +157,7 @@ public class ArrowsMinigame : MonoBehaviour
             }
 
             StopCoroutine(_timerCoroutine);
-            _timer.text = _stagesTimers[_currentStage] + ":00";
+            ResetTimerImage();
             StartStage();
 
             return;
