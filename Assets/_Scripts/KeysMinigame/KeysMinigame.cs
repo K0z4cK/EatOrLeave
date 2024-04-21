@@ -83,10 +83,6 @@ public class KeysMinigame : MonoBehaviour
         else if (Input.anyKeyDown)
         {
             QTEFailed();
-            GameManager.Instance.IncreaseWeight(3);
-            GameManager.Instance.DecreaseTime(3);
-            
-
         }
     }
 
