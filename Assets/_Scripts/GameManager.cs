@@ -66,4 +66,5 @@ public class GameManager : MonoBehaviour
     public void DecreaseDifficulty() => CurrentDifficultyValue--;
     public void IncreaseDifficulty() => CurrentDifficultyValue++;
     public void StopGame() => _isRoundStillGoing = false;
+    public void AddToTime(int x) => TimerInSeconds += x;
 }
