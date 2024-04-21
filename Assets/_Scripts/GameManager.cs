@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,7 +9,6 @@ public class GameManager : MonoBehaviour
     {
         Pointer, Arrows, Keys
     }
-
 
     private enum DifficultyValue
     {
@@ -34,6 +34,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private MidGame _midGame;
 
+    [SerializeField] private TextMeshProUGUI weightIndicator;
+    [SerializeField] private TextMeshProUGUI moneyIndicator;
+    [SerializeField] private TextMeshProUGUI timeIndicator;
+
     private int _currentDifficultyValue = 1;
     private int _currentTimeInSeconds = 60;
     private const int _timerChangeDelay = 1;
@@ -49,7 +53,11 @@ public class GameManager : MonoBehaviour
     public int TimerInSeconds
     {
         get => _currentTimeInSeconds;
-        private set => _currentTimeInSeconds = Mathf.Clamp(value, 0, 60);
+        private set
+        {
+            _currentTimeInSeconds = Mathf.Clamp(value, 0, 60);
+            timeIndicator.text = _currentTimeInSeconds.ToString();
+        }
     }
 
     private void Awake()
