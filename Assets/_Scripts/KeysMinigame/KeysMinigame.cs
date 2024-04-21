@@ -78,10 +78,6 @@ public class KeysMinigame : MonoBehaviour
                 return;
             }
         }
-        else if (Input.anyKeyDown)
-        {
-            QTEFailed();
-        }
     }
 
     private void ChangeTimerImage()
