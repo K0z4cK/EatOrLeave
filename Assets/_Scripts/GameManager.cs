@@ -4,14 +4,35 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    private enum MinigamesType 
+    {
+        Pointer, Arrows, Keys
+    }
+
+
     private enum DifficultyValue
     {
         Easy = 1,
-        Hard = 2,
-        Suicide = 3
+        Hard = 5,
+        Suicide = 10
     }
 
     public static GameManager Instance;
+
+    [SerializeField]
+    private List<MinigamesType> _minigamesTypes;
+
+    private int _currentMinigame = 0;
+
+    [SerializeField]
+    private ArrowsMinigame _arrowsMinigame;
+    [SerializeField]
+    private ArrowMinigame _pointerMinigame;
+    [SerializeField]
+    private KeysMinigame _keysMinigame;
+
+    [SerializeField]
+    private MidGame _midGame;
 
     private int _currentDifficultyValue = 1;
     private int _currentTimeInSeconds = 60;
@@ -42,6 +63,51 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(StartTimer());
+        StartLevel();
+    }
+
+
+    private void ShuffleMinigames()
+    {
+        Shuffle(_minigamesTypes);
+        _currentMinigame = 0;
+    }
+
+    private void StartLevel()
+    {
+        ShuffleMinigames();
+        NextMinigame();
+    }
+
+
+    public void NextMinigame()
+    {
+        switch (_minigamesTypes[_currentMinigame])
+        {
+            case MinigamesType.Pointer:
+                _pointerMinigame.gameObject.SetActive(true);
+                _pointerMinigame.Init();
+                break;
+            case MinigamesType.Arrows:
+                _arrowsMinigame.gameObject.SetActive(true);
+                _arrowsMinigame.Init();
+                break;
+            case MinigamesType.Keys:
+                _keysMinigame.gameObject.SetActive(true);
+                _keysMinigame.Init();
+                break;
+        }
+
+    }
+
+    public void StartMidgame()
+    {
+        _currentMinigame++;
+        _pointerMinigame.gameObject.SetActive(false);
+        _arrowsMinigame.gameObject.SetActive(false);
+        _keysMinigame.gameObject.SetActive(false);
+
+        _midGame.Init();
     }
 
     private IEnumerator StartTimer()
@@ -67,6 +133,23 @@ public class GameManager : MonoBehaviour
 
     public void DecreaseDifficulty() => CurrentDifficultyValue--;
     public void IncreaseDifficulty() => CurrentDifficultyValue++;
+
+    public void IncreaseTime(int time) => TimerInSeconds += time;
+    public void DecreaseTime(int time) => TimerInSeconds -= time;
+
     public void StopGame() => _isRoundStillGoing = false;
+
+    static void Shuffle<T>(List<T> list)
+    {
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = Random.Range(0, n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
+    }
     public void AddToTime(int x) => TimerInSeconds += x;
 }
