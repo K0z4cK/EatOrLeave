@@ -73,7 +73,15 @@ public class MidGame : MonoBehaviour
     {
         if (_slider.value <= _lineValue + 0.005f && _slider.value >= _lineValue - 0.005f)
         {
+            GameManager.Instance.DecreaseDifficulty();
+            GameManager.Instance.DecreaseDifficulty();
+            GameManager.Instance.IncreaseTime(5);
             Debug.Log("Perfect");
+        }
+        else if (_slider.value <= _lineValue + 0.01f && _slider.value >= _lineValue - 0.01f)
+        {
+            GameManager.Instance.DecreaseDifficulty();
+            Debug.Log("Very Good");
         }
         else if (_slider.value <= _lineValue + 0.05f && _slider.value >= _lineValue - 0.05f)
         {
@@ -81,13 +89,21 @@ public class MidGame : MonoBehaviour
         }
         else if (_slider.value <= _lineValue + 0.1f && _slider.value >= _lineValue - 0.1f)
         {
+            GameManager.Instance.IncreaseDifficulty();
             Debug.Log("Almost False");
         }
         else if (_slider.value <= _lineValue + 0.2f && _slider.value >= _lineValue - 0.2f)
         {
+            GameManager.Instance.IncreaseDifficulty();
+            GameManager.Instance.IncreaseDifficulty();
             Debug.Log("Not Good");
         }
         else
+        {
+            GameManager.Instance.IncreaseDifficulty();
+            GameManager.Instance.IncreaseDifficulty();
+            GameManager.Instance.DecreaseTime(5);
             Debug.Log("Bad");
+        }
     }
 }

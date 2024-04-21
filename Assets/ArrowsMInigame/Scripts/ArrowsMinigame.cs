@@ -40,13 +40,14 @@ public class ArrowsMinigame : MonoBehaviour
 
     private Coroutine _timerCoroutine;
 
-    private void Start()
+    /*private void Start()
     {
         Init();
-    }
+    }*/
 
     public void Init()
     {
+        _currentStage = 0;
         StartStage();
     }
 
