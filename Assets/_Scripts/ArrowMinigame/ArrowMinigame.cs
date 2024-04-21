@@ -14,9 +14,11 @@ public class ArrowMinigame : MonoBehaviour
     private int _moveDirection;
 
     private GameObject _spawnedSafeZone;
+    private GameManager _instance;
 
     private int _timesGameWasCompleted = 0;
     private const int _gamesCompletedLimit = 3;
+    private const float _difficultyCoef = 0.05f;
     private bool _isMinigameFinished = false;
     private readonly float[] _safeZoneWidths = { 1f, 0.7f, 0.4f };
 
@@ -29,6 +31,7 @@ public class ArrowMinigame : MonoBehaviour
     private void Start()
     {
         _moveDirection = (int)MoveDirection.Right;
+        _instance = GameManager.Instance;
 
         SpawnSafeZone(_safeZoneWidths[_timesGameWasCompleted]);
         StartCoroutine(MoveArrow());
@@ -45,7 +48,7 @@ public class ArrowMinigame : MonoBehaviour
             if (Mathf.Approximately(slider.value, 0))
                 _moveDirection = (int)MoveDirection.Right;
 
-            slider.value += _moveStep * _moveDirection * Time.deltaTime;
+            slider.value += _moveStep * _moveDirection * Time.deltaTime * _difficultyCoef * _instance.CurrentDifficultyValue;
         } 
     }
 
@@ -77,15 +80,23 @@ public class ArrowMinigame : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space)) {
             if (IsArrowInSafeZone())
             {
-                _timesGameWasCompleted++;
-                CheckWinCondition();
-
-                if (!_isMinigameFinished)
-                    UpdateDifficulty();
+                ProgressMinigame();
             }
             else
-                print("Minigame lose!"); 
+            {
+                ProgressMinigame();
+                _instance.IncreaseDifficulty();
+            }
         }
+    }
+
+    private void ProgressMinigame()
+    {
+        _timesGameWasCompleted++;
+        CheckWinCondition();
+
+        if (!_isMinigameFinished)
+            UpdateDifficulty();
     }
 
     private bool IsArrowInSafeZone()

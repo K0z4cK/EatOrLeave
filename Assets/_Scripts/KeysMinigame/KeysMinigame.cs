@@ -12,6 +12,7 @@ public class KeysMinigame : MonoBehaviour
 
     private List<string> _keySequence; 
     private float _timer;
+    private const float _difficultyCoef = 0.25f;
     private bool _isQTEActive;
     private int _sequenceIndex = 0;
     private readonly int[] _currentSequenceKeysCount = { 4, 5, 6 };
@@ -35,7 +36,7 @@ public class KeysMinigame : MonoBehaviour
     private void StartQTE()
     {
         // Reset timer and flag
-        _timer = timeLimit;
+        _timer = timeLimit - _difficultyCoef * GameManager.Instance.CurrentDifficultyValue;
         _isQTEActive = true;
         _sequenceIndex = 0;
         ResetTimerImage();
@@ -70,9 +71,13 @@ public class KeysMinigame : MonoBehaviour
 
             if (_keySequence.Count == 0)
             {
-                QTESucceeded();
+                ProgressQTE();
                 return;
             }
+        }
+        else if (Input.anyKeyDown)
+        {
+            QTEFailed();
         }
     }
 
@@ -116,7 +121,7 @@ public class KeysMinigame : MonoBehaviour
         };
     }
 
-    private void QTESucceeded()
+    private void ProgressQTE()
     {
         _timesMinigameWasFinished++;
         CheckWinCondition();
@@ -132,6 +137,7 @@ public class KeysMinigame : MonoBehaviour
             _isMinigameFinished = true;
             _isQTEActive = false;
 
+            GameManager.Instance.StopGame();
             print("Minigame complete");
         }
     }
@@ -144,6 +150,8 @@ public class KeysMinigame : MonoBehaviour
 
     private void QTEFailed()
     {
-        Debug.Log("QTE Failed!");
+        GameManager.Instance.IncreaseDifficulty();
+        print("FAILED");
+        ProgressQTE();
     }
 }
