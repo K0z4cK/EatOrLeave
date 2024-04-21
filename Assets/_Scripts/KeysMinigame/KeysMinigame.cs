@@ -62,6 +62,8 @@ public class KeysMinigame : MonoBehaviour
         {
             //GameManager.Instance.NextFoodStage();
             QTEFailed();
+            GameManager.Instance.IncreaseWeight(3);
+            GameManager.Instance.DecreaseTime(3);
             return;
         }
 
@@ -81,6 +83,9 @@ public class KeysMinigame : MonoBehaviour
         else if (Input.anyKeyDown)
         {
             QTEFailed();
+            GameManager.Instance.IncreaseWeight(3);
+            GameManager.Instance.DecreaseTime(3);
+
         }
     }
 
@@ -115,6 +120,7 @@ public class KeysMinigame : MonoBehaviour
     private void ProgressQTE()
     {
         GameManager.Instance.NextFoodStage();
+        GameManager.Instance.IncreaseWeight(1);
         _timesMinigameWasFinished++;
         CheckWinCondition();
 

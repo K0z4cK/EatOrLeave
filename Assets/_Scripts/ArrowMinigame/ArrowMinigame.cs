@@ -83,10 +83,14 @@ public class ArrowMinigame : MonoBehaviour
             GameManager.Instance.NextFoodStage();
             if (IsArrowInSafeZone())
             {
+                GameManager.Instance.IncreaseWeight(1);
+
                 ProgressMinigame();
             }
             else
             {
+                GameManager.Instance.IncreaseWeight(1);
+                GameManager.Instance.DecreaseTime(3);
                 ProgressMinigame();
                 _instance.IncreaseDifficulty();
             }

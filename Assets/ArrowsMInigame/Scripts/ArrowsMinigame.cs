@@ -117,6 +117,8 @@ public class ArrowsMinigame : MonoBehaviour
         Debug.Log("Penalty");
         _currentStage++;
         GameManager.Instance.NextFoodStage();
+        GameManager.Instance.IncreaseWeight(5);
+        GameManager.Instance.DecreaseTime(3);
 
         if (_currentStage == _stagesTimers.Count)
         {
@@ -151,6 +153,7 @@ public class ArrowsMinigame : MonoBehaviour
         {
             _currentStage++;
             GameManager.Instance.NextFoodStage();
+            GameManager.Instance.IncreaseWeight(2);
             _isTimerStart = false;
 
             if (_currentStage == _stagesTimers.Count)
