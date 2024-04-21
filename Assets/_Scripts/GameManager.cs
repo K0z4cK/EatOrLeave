@@ -25,6 +25,13 @@ public class GameManager : MonoBehaviour
     private int _currentMinigame = 0;
 
     [SerializeField]
+    private List<Transform> _food;
+
+    private int _currentFoodIndex = 0;
+
+    private int _currentFoodStage = 0;
+
+    [SerializeField]
     private ArrowsMinigame _arrowsMinigame;
     [SerializeField]
     private ArrowMinigame _pointerMinigame;
@@ -42,7 +49,11 @@ public class GameManager : MonoBehaviour
     private int _currentTimeInSeconds = 60;
     private const int _timerChangeDelay = 1;
     private bool _isRoundStillGoing = true;
-    
+
+    private int _currentMoney = 1000;
+    private int _currentWeight = 70;
+
+
     public bool IsGameLosed { get; set; }
 
     public int CurrentDifficultyValue { 
@@ -70,7 +81,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        weightIndicator.text = _currentWeight + "KG";
+        moneyIndicator.text = _currentMoney + "$";
+
         StartCoroutine(StartTimer());
+        Shuffle(_food);
         StartLevel();
     }
 
@@ -81,8 +96,27 @@ public class GameManager : MonoBehaviour
         _currentMinigame = 0;
     }
 
+    private void SetFood()
+    {
+        _food.ForEach(x => x.gameObject.SetActive(false));
+        _food[_currentFoodIndex].gameObject.SetActive(true);
+    }
+
+    public void NextFoodStage()
+    {
+        _currentFoodStage++;
+        foreach (Transform item in _food[_currentFoodIndex])
+        {
+            item.gameObject.SetActive(false);
+        }
+        if (_currentFoodStage < 9)
+            _food[_currentFoodIndex].GetChild(_currentFoodStage).gameObject.SetActive(true);
+    }
+
     private void StartLevel()
     {
+        _currentFoodStage = 0;
+        SetFood();
         ShuffleMinigames();
         NextMinigame();
     }
@@ -110,9 +144,17 @@ public class GameManager : MonoBehaviour
     public void StartMidgame()
     {
         _currentMinigame++;
+
         _pointerMinigame.gameObject.SetActive(false);
         _arrowsMinigame.gameObject.SetActive(false);
         _keysMinigame.gameObject.SetActive(false);
+
+        if (_currentMinigame >= _minigamesTypes.Count)
+        {
+            _currentFoodIndex++;
+            StartLevel();           
+            return;
+        }
 
         _midGame.Init();
     }
@@ -124,7 +166,7 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(_timerChangeDelay);
             TimerInSeconds--;
             print(TimerInSeconds);
-
+            timeIndicator.text = "0:"+TimerInSeconds.ToString();
             CheckLoseCondition();
         }
     }
@@ -159,4 +201,27 @@ public class GameManager : MonoBehaviour
         }
     }
     public void AddToTime(int x) => TimerInSeconds += x;
+
+    public void IncreaseWeight(int x) {
+        _currentWeight += x;
+        weightIndicator.text = _currentWeight + "KG";
+    }
+
+    public void DecreaseWeight(int x)
+    {
+        _currentWeight -= x;
+        weightIndicator.text = _currentWeight + "KG";
+    }
+
+    public void IncreaseMoneyt(int x)
+    {
+        _currentMoney += x;
+        moneyIndicator.text = _currentMoney + "$";
+    }
+
+    public void DecreaseMoney(int x)
+    {
+        _currentMoney -= x;
+        moneyIndicator.text = _currentMoney + "$";
+    }
 }

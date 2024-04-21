@@ -23,6 +23,8 @@ public class KeysMinigame : MonoBehaviour
 
     public void Init()
     {
+        _timesMinigameWasFinished = 0;
+        _keySequence = null;
         _isMinigameFinished = false;
         StartQTE();
     }
@@ -58,6 +60,7 @@ public class KeysMinigame : MonoBehaviour
 
         if (_timer <= 0)
         {
+            //GameManager.Instance.NextFoodStage();
             QTEFailed();
             return;
         }
@@ -111,6 +114,7 @@ public class KeysMinigame : MonoBehaviour
 
     private void ProgressQTE()
     {
+        GameManager.Instance.NextFoodStage();
         _timesMinigameWasFinished++;
         CheckWinCondition();
 

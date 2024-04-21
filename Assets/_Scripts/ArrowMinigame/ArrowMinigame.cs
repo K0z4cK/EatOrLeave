@@ -80,6 +80,7 @@ public class ArrowMinigame : MonoBehaviour
             return;
 
         if (Input.GetKeyDown(KeyCode.Space)) {
+            GameManager.Instance.NextFoodStage();
             if (IsArrowInSafeZone())
             {
                 ProgressMinigame();
