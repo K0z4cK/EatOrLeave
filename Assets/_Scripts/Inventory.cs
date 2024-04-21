@@ -24,14 +24,33 @@ public class Inventory : MonoBehaviour
     private bool _isBinItemAvailable;
     private bool _isNeedleItemAvailable;
 
+    private int _weight;
+    private const int _weightLimit = 666;
+
+    private int WaterWeightDecrease => (int)(_weight / 10);
+
+    public int Weigth
+    {
+        get => _weight;
+        set
+        {
+            _weight = Mathf.Clamp(value, 50, _weightLimit);
+
+            if (_weight >= _weightLimit) {
+                print("OBESE FUCK JUST DIED! YOU LOSE");
+            }
+        }
+    }
+
     private void Start()
     {
         InitiateItemsStatus();
+        _weight = 200;
     }
 
     private void InitiateItemsStatus()
     {
-          _isWaterItemAvailable = true;
+         _isWaterItemAvailable = true;
          _isEnergyDrinkItemAvailable = true;
          _isBinItemAvailable = true;
          _isNeedleItemAvailable = true;
@@ -54,6 +73,7 @@ public class Inventory : MonoBehaviour
         if (!_isWaterItemAvailable)
             return;
 
+        Weigth -= WaterWeightDecrease;
         ConsumeItem(waterImage, ref _isWaterItemAvailable);
     }
 
@@ -61,7 +81,8 @@ public class Inventory : MonoBehaviour
     {
         if (!_isEnergyDrinkItemAvailable)
             return;
-
+        // + more time than water and + calories
+        // 30% 
         ConsumeItem(energyDrinkImage, ref _isEnergyDrinkItemAvailable);
     }
 
