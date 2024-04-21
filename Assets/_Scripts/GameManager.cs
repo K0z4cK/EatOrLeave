@@ -87,7 +87,6 @@ public class GameManager : MonoBehaviour
         NextMinigame();
     }
 
-
     public void NextMinigame()
     {
         switch (_minigamesTypes[_currentMinigame])
