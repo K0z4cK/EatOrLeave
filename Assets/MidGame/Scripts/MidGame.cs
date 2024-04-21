@@ -81,26 +81,31 @@ public class MidGame : MonoBehaviour
         }
         else if (_slider.value <= _lineValue + 0.01f && _slider.value >= _lineValue - 0.01f)
         {
+            GameManager.Instance.DecreaseMoney(1);
             GameManager.Instance.DecreaseDifficulty();
             Debug.Log("Very Good");
         }
         else if (_slider.value <= _lineValue + 0.05f && _slider.value >= _lineValue - 0.05f)
         {
+            GameManager.Instance.DecreaseMoney(2);
             Debug.Log("Good Enough");
         }
         else if (_slider.value <= _lineValue + 0.1f && _slider.value >= _lineValue - 0.1f)
         {
+            GameManager.Instance.DecreaseMoney(5);
             GameManager.Instance.IncreaseDifficulty();
             Debug.Log("Almost False");
         }
         else if (_slider.value <= _lineValue + 0.2f && _slider.value >= _lineValue - 0.2f)
         {
+            GameManager.Instance.DecreaseMoney(10);
             GameManager.Instance.IncreaseDifficulty();
             GameManager.Instance.IncreaseDifficulty();
             Debug.Log("Not Good");
         }
         else
         {
+            GameManager.Instance.DecreaseMoney(20);
             GameManager.Instance.IncreaseDifficulty();
             GameManager.Instance.IncreaseDifficulty();
             GameManager.Instance.DecreaseTime(5);

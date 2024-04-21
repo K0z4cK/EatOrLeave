@@ -39,6 +39,11 @@ public class GameManager : MonoBehaviour
     private KeysMinigame _keysMinigame;
 
     [SerializeField]
+    private Transform _winPanel;
+    [SerializeField]
+    private Transform _losePanel;
+
+    [SerializeField]
     private MidGame _midGame;
 
     [SerializeField] private TextMeshProUGUI weightIndicator;
@@ -115,6 +120,12 @@ public class GameManager : MonoBehaviour
 
     private void StartLevel()
     {
+        if (_currentFoodIndex >= _food.Count)
+        {
+            _winPanel.gameObject.SetActive(true);
+            return;
+        }
+
         _currentFoodStage = 0;
         SetFood();
         ShuffleMinigames();
@@ -176,6 +187,8 @@ public class GameManager : MonoBehaviour
         if (Mathf.Approximately(TimerInSeconds, 0))
         {
             StopGame();
+            _winPanel.gameObject.SetActive(true);
+            Time.timeScale = 0;
             print("GAME LOSE");
         }
     }
@@ -213,7 +226,7 @@ public class GameManager : MonoBehaviour
         weightIndicator.text = _currentWeight + "KG";
     }
 
-    public void IncreaseMoneyt(int x)
+    public void IncreaseMoney(int x)
     {
         _currentMoney += x;
         moneyIndicator.text = _currentMoney + "$";
@@ -223,5 +236,15 @@ public class GameManager : MonoBehaviour
     {
         _currentMoney -= x;
         moneyIndicator.text = _currentMoney + "$";
+    }
+
+    public void RestartGame()
+    {
+        Application.LoadLevel("MainGame");
+    }
+
+    public void ToMenu()
+    {
+        Application.LoadLevel("_MainMenu");
     }
 }

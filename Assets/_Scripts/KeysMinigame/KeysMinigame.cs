@@ -85,6 +85,7 @@ public class KeysMinigame : MonoBehaviour
             QTEFailed();
             GameManager.Instance.IncreaseWeight(3);
             GameManager.Instance.DecreaseTime(3);
+            
 
         }
     }
