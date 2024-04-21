@@ -49,7 +49,11 @@ public class GameManager : MonoBehaviour
     private int _currentTimeInSeconds = 60;
     private const int _timerChangeDelay = 1;
     private bool _isRoundStillGoing = true;
-    
+
+    private int _currentMoney = 1000;
+    private int _currentWeight = 70;
+
+
     public bool IsGameLosed { get; set; }
 
     public int CurrentDifficultyValue { 
@@ -77,6 +81,9 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        weightIndicator.text = _currentWeight + "KG";
+        moneyIndicator.text = _currentMoney + "$";
+
         StartCoroutine(StartTimer());
         Shuffle(_food);
         StartLevel();
@@ -159,7 +166,7 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(_timerChangeDelay);
             TimerInSeconds--;
             print(TimerInSeconds);
-
+            timeIndicator.text = "0:"+TimerInSeconds.ToString();
             CheckLoseCondition();
         }
     }
@@ -194,4 +201,27 @@ public class GameManager : MonoBehaviour
         }
     }
     public void AddToTime(int x) => TimerInSeconds += x;
+
+    public void IncreaseWeight(int x) {
+        _currentWeight += x;
+        weightIndicator.text = _currentWeight + "KG";
+    }
+
+    public void DecreaseWeight(int x)
+    {
+        _currentWeight -= x;
+        weightIndicator.text = _currentWeight + "KG";
+    }
+
+    public void IncreaseMoneyt(int x)
+    {
+        _currentMoney += x;
+        moneyIndicator.text = _currentMoney + "$";
+    }
+
+    public void DecreaseMoney(int x)
+    {
+        _currentMoney -= x;
+        moneyIndicator.text = _currentMoney + "$";
+    }
 }
