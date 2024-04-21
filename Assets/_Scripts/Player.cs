@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Inventory : MonoBehaviour
+public class Player : MonoBehaviour
 {
     private enum ItemKeys
     {
@@ -12,6 +12,8 @@ public class Inventory : MonoBehaviour
         Bin = 3,
         Needle = 4
     }
+
+    private GameManager _instance;
 
     [SerializeField, Range(0f, 1f)] private float afterUseTransparancy;
     [SerializeField] private Image waterImage;
@@ -44,6 +46,7 @@ public class Inventory : MonoBehaviour
 
     private void Start()
     {
+        _instance = GameManager.Instance;
         InitiateItemsStatus();
         _weight = 200;
     }
@@ -74,6 +77,7 @@ public class Inventory : MonoBehaviour
             return;
 
         Weigth -= WaterWeightDecrease;
+        _instance.AddToTime(4);
         ConsumeItem(waterImage, ref _isWaterItemAvailable);
     }
 
@@ -81,8 +85,20 @@ public class Inventory : MonoBehaviour
     {
         if (!_isEnergyDrinkItemAvailable)
             return;
-        // + more time than water and + calories
-        // 30% 
+
+        float badUseProbalitity = Random.Range(0f, 1f);
+
+        if (badUseProbalitity < 0.3f)
+        {
+            Weigth += (int)(WaterWeightDecrease * 1.5);
+            _instance.AddToTime(3);
+        }
+        else
+        {
+            Weigth += WaterWeightDecrease;
+            _instance.AddToTime(7);
+        }
+
         ConsumeItem(energyDrinkImage, ref _isEnergyDrinkItemAvailable);
     }
 
@@ -91,6 +107,13 @@ public class Inventory : MonoBehaviour
         if (!_isBinItemAvailable)
             return;
 
+        float badUseProbalitity = Random.Range(0f, 1f);
+
+        if (badUseProbalitity < 0.1f)
+            _instance.AddToTime(-10);
+        else
+            print("Bin used: skip entire minigame");
+
         ConsumeItem(binImage, ref _isBinItemAvailable);
     }
 
@@ -98,6 +121,13 @@ public class Inventory : MonoBehaviour
     {
         if (!_isNeedleItemAvailable)
             return;
+
+        float badUseProbalitity = Random.Range(0f, 1f);
+
+        if (badUseProbalitity < 0.05f)
+            _instance.IsGameLosed = true;
+        else
+            Weigth -= (int)(Weigth * 0.2f);
 
         ConsumeItem(needleImage, ref _isNeedleItemAvailable);
     }
