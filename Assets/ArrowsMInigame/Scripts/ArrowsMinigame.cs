@@ -116,6 +116,8 @@ public class ArrowsMinigame : MonoBehaviour
         _isTimerStart = false;
         Debug.Log("Penalty");
         _currentStage++;
+        GameManager.Instance.NextFoodStage();
+
         if (_currentStage == _stagesTimers.Count)
         {
             Debug.Log("End");
@@ -148,6 +150,7 @@ public class ArrowsMinigame : MonoBehaviour
         if (Input.GetKey(_leftArrow.keyCode) && Input.GetKey(_rightArrow.keyCode))
         {
             _currentStage++;
+            GameManager.Instance.NextFoodStage();
             _isTimerStart = false;
 
             if (_currentStage == _stagesTimers.Count)
@@ -161,6 +164,7 @@ public class ArrowsMinigame : MonoBehaviour
             StopCoroutine(_timerCoroutine);
             ResetTimerImage();
             StartStage();
+            
 
             return;
             //win;

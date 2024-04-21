@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
         Pointer, Arrows, Keys
     }
 
-
     private enum DifficultyValue
     {
         Easy = 1,
@@ -23,6 +22,13 @@ public class GameManager : MonoBehaviour
     private List<MinigamesType> _minigamesTypes;
 
     private int _currentMinigame = 0;
+
+    [SerializeField]
+    private List<Transform> _food;
+
+    private int _currentFoodIndex = 0;
+
+    private int _currentFoodStage = 0;
 
     [SerializeField]
     private ArrowsMinigame _arrowsMinigame;
@@ -63,6 +69,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(StartTimer());
+        Shuffle(_food);
         StartLevel();
     }
 
@@ -73,12 +80,30 @@ public class GameManager : MonoBehaviour
         _currentMinigame = 0;
     }
 
+    private void SetFood()
+    {
+        _food.ForEach(x => x.gameObject.SetActive(false));
+        _food[_currentFoodIndex].gameObject.SetActive(true);
+    }
+
+    public void NextFoodStage()
+    {
+        _currentFoodStage++;
+        foreach (Transform item in _food[_currentFoodIndex])
+        {
+            item.gameObject.SetActive(false);
+        }
+        if (_currentFoodStage < 9)
+            _food[_currentFoodIndex].GetChild(_currentFoodStage).gameObject.SetActive(true);
+    }
+
     private void StartLevel()
     {
+        _currentFoodStage = 0;
+        SetFood();
         ShuffleMinigames();
         NextMinigame();
     }
-
 
     public void NextMinigame()
     {
@@ -103,9 +128,17 @@ public class GameManager : MonoBehaviour
     public void StartMidgame()
     {
         _currentMinigame++;
+
         _pointerMinigame.gameObject.SetActive(false);
         _arrowsMinigame.gameObject.SetActive(false);
         _keysMinigame.gameObject.SetActive(false);
+
+        if (_currentMinigame >= _minigamesTypes.Count)
+        {
+            _currentFoodIndex++;
+            StartLevel();           
+            return;
+        }
 
         _midGame.Init();
     }

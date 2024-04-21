@@ -1505,7 +1505,7 @@ MonoBehaviour:
   safeZoneParent: {fileID: 754434644}
   targetImage: {fileID: 1712697385}
   handle: {fileID: 841728677}
-  _moveStep: 19.5
+  _moveStep: 15.2
 --- !u!1 &672003644
 GameObject:
   m_ObjectHideFlags: 0
@@ -2310,6 +2310,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _minigamesTypes: 000000000100000002000000
+  _food:
+  - {fileID: 1603283622}
+  - {fileID: 2105921679}
+  - {fileID: 1962987864}
   _arrowsMinigame: {fileID: 1186864201}
   _pointerMinigame: {fileID: 616754811}
   _keysMinigame: {fileID: 1034580599}
