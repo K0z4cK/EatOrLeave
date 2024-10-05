@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -29,8 +26,6 @@ public class ArrowsMinigame : MonoBehaviour
     [SerializeField] 
     private Image[] timerLines;
 
-    //private float _timer;
-
     private Arrow _leftArrow;
     private Arrow _rightArrow;
 
@@ -40,25 +35,15 @@ public class ArrowsMinigame : MonoBehaviour
 
     private Coroutine _timerCoroutine;
 
-    /*private void Start()
-    {
-        Init();
-    }*/
-
     public void Init()
     {
         _currentStage = 0;
+        ResetTimerImage();
         StartStage();
     }
 
     private void StartStage()
     {
-        //_leftArrow = _arrows[Random.Range(0, _arrows.Count)];
-        /*while (_rightArrow.keyCode == _leftArrow.keyCode)
-        {
-            _rightArrow = _arrows[Random.Range(0, _arrows.Count)];
-        }*/
-
         int n = _arrows.Count;
         while (n > 1)
         {
@@ -132,7 +117,6 @@ public class ArrowsMinigame : MonoBehaviour
             ResetTimerImage();
             StartStage();
         }
-        //lose
     }
 
     private void FixedUpdate()

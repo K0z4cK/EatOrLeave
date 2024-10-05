@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -72,7 +73,11 @@ public class GameManager : MonoBehaviour
         private set
         {
             _currentTimeInSeconds = Mathf.Clamp(value, 0, 60);
-            timeIndicator.text = _currentTimeInSeconds.ToString();
+            string textSeconds = TimerInSeconds.ToString();
+            if(TimerInSeconds < 10)
+                textSeconds = "0"+ TimerInSeconds.ToString();
+
+            timeIndicator.text = "0:" + textSeconds;
         }
     }
 
@@ -122,6 +127,7 @@ public class GameManager : MonoBehaviour
     {
         if (_currentFoodIndex >= _food.Count)
         {
+            StopGame();
             _winPanel.gameObject.SetActive(true);
             return;
         }
@@ -149,7 +155,6 @@ public class GameManager : MonoBehaviour
                 _keysMinigame.Init();
                 break;
         }
-
     }
 
     public void StartMidgame()
@@ -176,8 +181,6 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(_timerChangeDelay);
             TimerInSeconds--;
-            print(TimerInSeconds);
-            timeIndicator.text = "0:"+TimerInSeconds.ToString();
             CheckLoseCondition();
         }
     }
@@ -187,7 +190,7 @@ public class GameManager : MonoBehaviour
         if (Mathf.Approximately(TimerInSeconds, 0))
         {
             StopGame();
-            _winPanel.gameObject.SetActive(true);
+            _losePanel.gameObject.SetActive(true);
             Time.timeScale = 0;
             print("GAME LOSE");
         }
@@ -240,11 +243,11 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        Application.LoadLevel("MainGame");
+        SceneManager.LoadScene("MainGame");
     }
 
     public void ToMenu()
     {
-        Application.LoadLevel("_MainMenu");
+        SceneManager.LoadScene("_MainMenu");
     }
 }

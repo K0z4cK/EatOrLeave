@@ -18,7 +18,7 @@ public class ArrowMinigame : MonoBehaviour
 
     private int _timesGameWasCompleted = 0;
     private const int _gamesCompletedLimit = 3;
-    private const float _difficultyCoef = 0.05f;
+    private const float _difficultyCoef = 0.02f;
     private bool _isMinigameFinished = false;
     private readonly float[] _safeZoneWidths = { 1f, 0.7f, 0.4f };
 
@@ -35,7 +35,6 @@ public class ArrowMinigame : MonoBehaviour
         _moveDirection = (int)MoveDirection.Right;
         _instance = GameManager.Instance;
         UpdateDifficulty();
-        //SpawnSafeZone(_safeZoneWidths[_timesGameWasCompleted]);
         StartCoroutine(MoveArrow());
     }
 
@@ -65,11 +64,13 @@ public class ArrowMinigame : MonoBehaviour
         float parentHeight = parentRect.rect.height;
 
         _spawnedSafeZone = Instantiate(safeZoneObj);
+        var safeZoneRect = _spawnedSafeZone.GetComponent<RectTransform>();
+
         _spawnedSafeZone.transform.SetParent(targetImage.transform);
 
-        _spawnedSafeZone.transform.localScale = new Vector3(safeZoneWidth, parentHeight / _spawnedSafeZone.GetComponent<RectTransform>().rect.height, 1f);
+        _spawnedSafeZone.transform.localScale = new Vector3(safeZoneWidth, parentHeight / safeZoneRect.rect.height, 1f);
 
-        float randomX = Random.Range(0f, parentWidth);
+        float randomX = Random.Range(0f + safeZoneRect.rect.width, parentWidth - safeZoneRect.rect.width);
 
         _spawnedSafeZone.transform.localPosition = new Vector3(randomX - parentWidth / 2f, 0, 0f);
     }
@@ -83,7 +84,7 @@ public class ArrowMinigame : MonoBehaviour
             GameManager.Instance.NextFoodStage();
             if (IsArrowInSafeZone())
             {
-                GameManager.Instance.IncreaseWeight(1);
+                GameManager.Instance.IncreaseWeight(2);
 
                 ProgressMinigame();
             }
@@ -108,9 +109,11 @@ public class ArrowMinigame : MonoBehaviour
 
     private bool IsArrowInSafeZone()
     {
-        if (handle.transform.position.x < _spawnedSafeZone.transform.position.x + _spawnedSafeZone.transform.localScale.x
-            && handle.transform.position.x > _spawnedSafeZone.transform.position.x - _spawnedSafeZone.transform.localScale.x)
+        RectTransform safeZoneRect = _spawnedSafeZone.GetComponent<RectTransform>();
+
+        if (safeZoneRect.rect.Contains(safeZoneRect.InverseTransformPoint((Vector2)handle.transform.GetChild(0).position)))
         {
+            print("in bounds");
             return true;
         }
         return false;
